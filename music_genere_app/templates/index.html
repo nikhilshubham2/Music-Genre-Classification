@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Audio Genre Prediction</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Add 'Poppins' font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .navbar {
+            background-color: #dc3545; /* Dark red navbar */
+        }
+        .navbar-brand, .navbar-text {
+            color: #fff !important; /* White text */
+        }
+        h2 {
+            color: #dc3545; /* Dark red header */
+        }
+        .btn-primary {
+            background-color: #dc3545; /* Dark red button */
+            border-color: #dc3545;
+        }
+        .btn-primary:hover {
+            background-color: #c82333; /* Slightly darker red on hover */
+            border-color: #bd2130;
+        }
+        .custom-file-label {
+            color: #dc3545; /* Dark red for file input label */
+        }
+        #predictedGenreLabel {
+            color: #dc3545; /* Dark red for predicted genre label */
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark">
+        <a class="navbar-brand" href="#">Music Genre Classification</a>
+    </nav>
+    <div class="container mt-5">
+        <h2>Upload an Audio File</h2>
+        <form method="POST" enctype="multipart/form-data" action="/">
+            <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" id="customFile" name="file" accept="audio/*">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+            <!-- Display the uploaded audio file above the submit button -->
+            <div class="mb-3">
+                <audio controls id="audioPlayer">
+                    <!-- Initially, there's no source -->
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <hr class="my-4">
+
+        <!-- Predicted genre result at the bottom, initially hidden -->
+        <h1 id="predictedGenreLabel" style="display: none;">Predicted Genre: <span id="predictedGenre">{{ genre }}</span></h1>
+    </div>
+
+    <!-- Add Bootstrap JS and Popper.js script links -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script>
+        // Update the audio source when a file is selected
+        document.getElementById('customFile').addEventListener('change', function(event) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const fileInput = event.target;
+
+            if (fileInput.files.length > 0) {
+                const audioFile = URL.createObjectURL(fileInput.files[0]);
+                audioPlayer.src = audioFile;
+            } else {
+                // Reset the audio source if no file is selected
+                audioPlayer.src = '';
+            }
+
+            // Update the custom file label with the selected file name
+            const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'Choose file';
+            document.querySelector('.custom-file-label').innerText = fileName;
+        });
+
+        // Display predicted genre after form submission
+        const predictedGenreLabel = document.getElementById('predictedGenreLabel');
+        const predictedGenre = document.getElementById('predictedGenre');
+        
+        // Check if the predicted genre is not empty
+        if (predictedGenre.innerText.trim() !== '') {
+            predictedGenreLabel.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
